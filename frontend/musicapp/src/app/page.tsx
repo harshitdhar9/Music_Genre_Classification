@@ -4,8 +4,7 @@
 import { useState } from "react";
 import { Input } from "./components/input";
 import { Button } from "./components/button";
-import { Upload, Music, Youtube, Headphones, Play, Volume2 } from "lucide-react";
-import Image from "next/image";
+import { Upload, Music, Youtube, Headphones, Volume2 } from "lucide-react";
 
 export default function Home() {
   const [youtubeLink, setYoutubeLink] = useState("");

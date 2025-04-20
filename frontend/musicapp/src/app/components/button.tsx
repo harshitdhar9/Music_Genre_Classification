@@ -1,15 +1,13 @@
-// components/button.tsx
 import * as React from "react";
 import { cn } from "../lib/utils";
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  asChild?: boolean;
   variant?: 'default' | 'outline' | 'subtle';
   size?: 'sm' | 'md' | 'lg';
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className = "", asChild = false, variant = 'default', size = 'md', ...props }, ref) => {
+  ({ className = "", variant = 'default', size = 'md', ...props }, ref) => {
     const baseStyles = "inline-flex items-center justify-center rounded-md font-medium transition-all focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-900 disabled:opacity-50 disabled:cursor-not-allowed";
     
     const variantStyles = {
