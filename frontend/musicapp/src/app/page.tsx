@@ -1,4 +1,3 @@
-// pages/index.tsx
 "use client";
 
 import { useState } from "react";
@@ -30,10 +29,8 @@ export default function Home() {
   
       if (response.ok) {
         const data = await response.json();
-        console.log("Predicted genre:", data.predicted_genre); // Log to see the returned genre
-  
-        // Assuming `predicted_genre` is just a string like "pop"
-        setGenreResults([data.predicted_genre]); // Set the predicted genre as an array
+        console.log("Predicted genre:", data.predicted_genre); 
+        setGenreResults([data.predicted_genre]); 
       } else {
         console.error("Error fetching genres:", response.statusText);
       }
@@ -63,7 +60,7 @@ export default function Home() {
   
       if (response.ok) {
         const data = await response.json();
-        setGeneratedMusicUrl(data.generatedMusicUrl); // Assume backend returns the URL to the generated music
+        setGeneratedMusicUrl(data.generatedMusicUrl); 
       } else {
         console.error("Error generating music:", response.statusText);
       }
