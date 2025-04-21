@@ -16,27 +16,65 @@ export default function Home() {
 
   const handleGenrePrediction = async () => {
     if (!youtubeLink) return;
-    
+  
     setIsPredicting(true);
-    // Simulate API call with timeout
-    setTimeout(() => {
-      console.log("Predicting genre for:", youtubeLink);
-      setGenreResults(["Rock (78%)", "Indie (60%)", "Electronic (25%)"]);
-      setIsPredicting(false);
-    }, 1500);
+  
+    try {
+      const response = await fetch("http://127.0.0.1:8000/predict-youtube", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ url: youtubeLink }),
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Predicted genre:", data.predicted_genre); // Log to see the returned genre
+  
+        // Assuming `predicted_genre` is just a string like "pop"
+        setGenreResults([data.predicted_genre]); // Set the predicted genre as an array
+      } else {
+        console.error("Error fetching genres:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error during API call:", error);
+    }
+  
+    setIsPredicting(false);
   };
+  
+  
+  
 
   const handleMusicGeneration = async () => {
     if (!file) return;
-    
+  
     setIsGenerating(true);
-    // Simulate API call with timeout
-    setTimeout(() => {
-      console.log("Generating music from:", file.name);
-      setGeneratedMusicUrl("https://example.com/generated.wav");
-      setIsGenerating(false);
-    }, 2000);
+  
+    const formData = new FormData();
+    formData.append("file", file);
+  
+    try {
+      const response = await fetch("http://127.0.0.1:8000/generate-music", {
+        method: "POST",
+        body: formData,
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        setGeneratedMusicUrl(data.generatedMusicUrl); // Assume backend returns the URL to the generated music
+      } else {
+        console.error("Error generating music:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error during API call:", error);
+    }
+  
+    setIsGenerating(false);
   };
+  
+  
 
   const formatFileName = (name: string) => {
     if (name.length > 20) {
@@ -87,36 +125,24 @@ export default function Home() {
                   <>Predict Genre</>
                 )}
               </Button>
-
               {genreResults.length > 0 && (
-                <div className="mt-6 bg-gray-900 bg-opacity-40 rounded-lg p-4">
-                  <div className="flex items-center mb-3">
-                    <Headphones className="h-5 w-5 text-purple-400 mr-2" />
-                    <p className="text-lg font-medium text-white">Predicted Genres:</p>
-                  </div>
-                  <div className="space-y-3">
-                    {genreResults.map((genre, idx) => {
-                      const [name, percentage] = genre.split(' ');
-                      const percentValue = parseInt(percentage.replace(/[()%]/g, ''));
-                      
-                      return (
-                        <div key={idx} className="relative">
-                          <div className="flex justify-between text-sm mb-1">
-                            <span>{name}</span>
-                            <span>{percentage}</span>
-                          </div>
-                          <div className="w-full bg-gray-700 rounded-full h-2.5">
-                            <div 
-                              className="bg-gradient-to-r from-purple-500 to-pink-500 h-2.5 rounded-full"
-                              style={{ width: `${percentValue}%` }}
-                            ></div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
+  <div className="mt-6 bg-gray-900 bg-opacity-40 rounded-lg p-4">
+    <div className="flex items-center mb-3">
+      <Headphones className="h-5 w-5 text-purple-400 mr-2" />
+      <p className="text-lg font-medium text-white">Predicted Genre:</p>
+    </div>
+    <div className="space-y-3">
+      {genreResults.map((genre, idx) => (
+        <div key={idx} className="relative">
+          <div className="flex justify-between text-sm mb-1">
+            <span>{genre}</span>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+)}
+
             </div>
           </div>
 
